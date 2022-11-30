@@ -61,13 +61,50 @@ todosListEl.innerHTML = "";
         <i 
             class="bi ${todo.checked ? 'bi-check-circle-fill' : 'bi-circle'}"
             style="color : ${todo.color}"
+            data-action="check"
         ></i> 
-        <p class="" >${todo.value}</p>
-        <i class="bi bi-pencil-square"></i>
-        <i class="bi bi-trash"></i>
+        <p class=""  data-action="check">${todo.value}</p>
+        <i class="bi bi-pencil-square" data-action="edit"></i>
+        <i class="bi bi-trash" data-action="delete"></i>
 
       </div>
         `
     })
+
 }
+
+//Click event listener for all clciks on todo
+
+todosListEl.addEventListener('click', (event)=>{
+    const target = event.target;
+    const parentElement = target.parentNode;
+    if (parentElement.className !== 'todo') return;
+
+    // Todo Id
+    const todo = parentElement;
+    const todoId = Number(todo.id);
+
+    // target action
+    const action = target.dataset.action;
+
+    action === "check" && checkTodo(todoId);
+   // action === "edit" && editTodo(todoId);
+   // action === "delete" && deleteTodo(todoId);
+    
+    
+});
+
+//check A todo
+function checkTodo(todoId){
+   todos = todos.map((todo, index)=> ({
+            ...todo,
+            checked: index === todoId ? !todo.checked : todo.checked
+        }));
+
+
+        renderTodos();
+
+   
+}
+
 
