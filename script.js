@@ -4,8 +4,11 @@ const todoInput = document.getElementById('newtodo')
 const todosListEl = document.getElementById('todos-list');
 const notificationEl = document.querySelector('.notification');
 // Vars
-let todos = [];
+let todos = JSON.parse(localStorage.getItem('todos')) || [];
 let EditTodoId= -1;
+
+//1st render
+renderTodos();
 
 //form submit
 form.addEventListener('submit', function (event) {
@@ -13,6 +16,7 @@ form.addEventListener('submit', function (event) {
 
     saveTodo();
     renderTodos();
+    localStorage.setItem('todos', JSON.stringify(todos))
 })
 
 // save todo function
@@ -67,8 +71,13 @@ else if(isDuplicate){
 
 //function render Todos
 function renderTodos(){
+ if(todos.length === 0){
+    todosListEl.innerHTML = '<center> Nothing to do ! </center>'
+    return; 
+ }
 //clear element before re-render
 todosListEl.innerHTML = "";
+
 
 //render Todos
     todos.forEach((todo, index)=>{
@@ -79,7 +88,7 @@ todosListEl.innerHTML = "";
             style="color : ${todo.color}"
             data-action="check"
         ></i> 
-        <p class=""  data-action="check">${todo.value}</p>
+        <p class="${todo.checked ? 'checked' : ''}"  data-action="check">${todo.value}</p>
         <i class="bi bi-pencil-square" data-action="edit"></i>
         <i class="bi bi-trash" data-action="delete"></i>
 
@@ -119,6 +128,7 @@ function checkTodo(todoId){
 
 
         renderTodos();
+        localStorage.setItem('todos', JSON.stringify(todos));
 
    
 }
@@ -136,6 +146,7 @@ function deleteTodo(todoId){
 
   //re-render todos
   renderTodos();
+  localStorage.setItem('todos', JSON.stringify(todos))
 }
 // show a nitification
 function showNotification(msg){
